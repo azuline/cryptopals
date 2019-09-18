@@ -69,5 +69,5 @@ if __name__ == '__main__':
 
     print('Key:')
     print(key)
-    print('Decrypted:')
-    print(five.encrypt(encrypted_data, key))
+    print('\nDecrypted:')
+    print(five.encrypt(encrypted_data, key).decode())
