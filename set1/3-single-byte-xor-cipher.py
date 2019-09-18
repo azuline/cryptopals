@@ -28,13 +28,12 @@ def select_option(options):
     return selected
 
 
-options = get_options(INPUT)
+if __name__ == '__main__':
+    options = get_options(INPUT)
+    print('Options:')
+    for o in options:
+        print(o)
 
-print('Options:')
-for o in options:
-    print(o)
-
-selected_option = select_option(options)
-
-print('\nSelected Option:')
-print(selected_option)
+    selected_option = select_option(options)
+    print('\nSelected Option:')
+    print(selected_option)
