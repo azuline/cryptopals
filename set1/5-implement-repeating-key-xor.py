@@ -5,15 +5,15 @@ OUTPUT = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a262263242727
 
 
 def encrypt(input_, key):
-    key = [ord(c) for c in key]
+    key = list(key)  # Bytes to list of ints.
     output = b''
     index = 0
     for c in input_:
-        output += bytes([ord(c) ^ key[index]])
+        output += bytes([c ^ key[index]])
         index = 0 if index == len(key) - 1 else index + 1
 
     return output.hex()
 
 
-assert encrypt(INPUT, 'ICE') == OUTPUT
+assert encrypt(INPUT.encode(), b'ICE') == OUTPUT
 print('Passed')
