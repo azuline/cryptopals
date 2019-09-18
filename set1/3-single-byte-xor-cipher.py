@@ -30,8 +30,6 @@ CHAR_FREQS = {
     ' ': 0.13000,
 }
 
-INPUT = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
-
 
 def xor(bytestring, byte):
     return bytes((b ^ byte) for b in bytestring)
@@ -61,7 +59,11 @@ def select_option(options):
 
 
 if __name__ == '__main__':
-    options = get_options(bytes.fromhex(INPUT))
+    input_ = (
+        '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
+    )
+
+    options = get_options(bytes.fromhex(input_))
     print('Options:')
     for o in options:
         print(o)

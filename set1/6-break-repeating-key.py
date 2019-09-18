@@ -7,48 +7,36 @@ KEYSIZE_LIMS = [2, 40]
 three = importlib.import_module('3-single-byte-xor-cipher')
 five = importlib.import_module('5-implement-repeating-key-xor')
 
-with (Path(__file__).parent / 'challenge-data' / '6.txt').open('r') as fp:
-    encrypted_data = base64.b64decode(fp.read())
-
 
 def compute_edit_distance(bstr1, bstr2):
     diff = [a ^ b for a, b, in zip(bstr1, bstr2)]
 
     edit_distance = 0
     for byte in diff:
-        for bit in bin(byte):
-            edit_distance += bit.count('1')
+        edit_distance += sum(bit.count('1') for bit in bin(byte))
 
     return edit_distance
 
 
-assert compute_edit_distance(b'this is a test', b'wokka wokka!!!') == 37
-
-
 def find_keysize(data, lower_limit, upper_limit):
-    selected_size = None
-    smallest_edit_distance = None
+    keysizes = []
     for size in range(lower_limit, upper_limit):
-        first = data[:size]
-        second = data[size : size * 2]
-        edit_distance = compute_edit_distance(first, second) / size or 1
-        if (
-            not smallest_edit_distance
-            or edit_distance < smallest_edit_distance
-        ):
-            selected_size = size
-            smallest_edit_distance = edit_distance
+        average_total = []
+        for i in range(0, len(data), size):
+            edit_dist = compute_edit_distance(
+                data[i : i + size], data[i + size : i + 2 * size]
+            )
+            average_total.append(edit_dist / (size or 1))
+        keysizes.append((sum(average_total) / (len(data) / size), size))
 
-    return selected_size
+    return sorted(keysizes, key=lambda tup: tup[0])[0][1]
 
 
 def break_ciphertext(data, keysize):
     blocks = []
-    for size in range(1, keysize):
-        datacopy = bytes(data)
-        while datacopy:
-            blocks.append(datacopy[:keysize])
-            datacopy = datacopy[keysize:]
+    while data:
+        blocks.append(data[:keysize])
+        data = data[keysize:]
     return blocks
 
 
@@ -66,6 +54,11 @@ def transpose_blocks(blocks, keysize):
 
 
 if __name__ == '__main__':
+    with (Path(__file__).parent / 'challenge-data' / '6.txt').open('r') as fp:
+        encrypted_data = base64.b64decode(fp.read())
+
+    assert compute_edit_distance(b'this is a test', b'wokka wokka!!!') == 37
+
     keysize = find_keysize(encrypted_data, *KEYSIZE_LIMS)
     blocks = break_ciphertext(encrypted_data, keysize)
     transposed_blocks = transpose_blocks(blocks, keysize)
