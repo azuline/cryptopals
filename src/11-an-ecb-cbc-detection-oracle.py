@@ -24,8 +24,8 @@ def encrypt_plaintext(cipher, plaintext):
     )
 
 
-def guess_mode(cipher_func):
-    encrypted = cipher_func(b'a' * 256)
+def guess_mode(cipher):
+    encrypted = encrypt_plaintext(cipher, b'a' * 256)
     found = set()
     for i in range(0, len(encrypted), 16):
         block = encrypted[i : i + 16]
@@ -38,6 +38,6 @@ def guess_mode(cipher_func):
 if __name__ == '__main__':
     for _ in range(10):
         mode, cipher = get_random_cipher()
-        guess = guess_mode(lambda text: encrypt_plaintext(cipher, text))
+        guess = guess_mode(cipher)
         assert mode == guess
     print('Passed')
