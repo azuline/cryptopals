@@ -1,5 +1,4 @@
 from pathlib import Path
-from Crypto.Cipher import AES
 
 
 def find_aes_in_ecb(ciphertexts):

@@ -4,7 +4,7 @@ from pathlib import Path
 from Crypto.Cipher import AES
 
 
-def decrypt(data, key):
+def ecb_decrypt(data, key):
     cipher = AES.new(key, mode=AES.MODE_ECB)
     return cipher.decrypt(data)
 
@@ -15,4 +15,4 @@ if __name__ == '__main__':
 
     key = b'YELLOW SUBMARINE'
 
-    print(decrypt(encrypted_data, key).decode())
+    print(ecb_decrypt(encrypted_data, key).decode())

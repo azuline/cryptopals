@@ -1,5 +1,3 @@
-import string
-
 CHAR_FREQS = {
     'a': 0.08167,
     'b': 0.01492,
