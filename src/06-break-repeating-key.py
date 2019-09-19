@@ -1,11 +1,11 @@
-import base64
-import importlib
+from importlib import import_module
+from base64 import b64decode
 from pathlib import Path
 
 KEYSIZE_LIMS = [2, 40]
 
-three = importlib.import_module('03-single-byte-xor-cipher')
-five = importlib.import_module('05-implement-repeating-key-xor')
+three = import_module('03-single-byte-xor-cipher')
+five = import_module('05-implement-repeating-key-xor')
 
 
 def compute_edit_distance(bstr1, bstr2):
@@ -55,7 +55,7 @@ def transpose_blocks(blocks, keysize):
 
 if __name__ == '__main__':
     with (Path(__file__).parent / 'challenge-data' / '6.txt').open('r') as fp:
-        encrypted_data = base64.b64decode(fp.read())
+        encrypted_data = b64decode(fp.read())
 
     assert compute_edit_distance(b'this is a test', b'wokka wokka!!!') == 37
 

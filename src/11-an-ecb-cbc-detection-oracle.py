@@ -1,10 +1,10 @@
-import importlib
+from importlib import import_module
 from random import randint
 from secrets import token_bytes as random_bytes
 
 from Crypto.Cipher import AES
 
-nine = importlib.import_module('09-implement-pkcs#7-padding')
+nine = import_module('09-implement-pkcs#7-padding')
 
 
 def get_padding():

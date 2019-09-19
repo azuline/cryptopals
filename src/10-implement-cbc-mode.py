@@ -1,11 +1,11 @@
-import base64
-import importlib
+from base64 import b64decode
+from importlib import import_module
 from pathlib import Path
 
 from Crypto.Cipher import AES
 
-two = importlib.import_module('02-fixed-xor')
-nine = importlib.import_module('09-implement-pkcs#7-padding')
+two = import_module('02-fixed-xor')
+nine = import_module('09-implement-pkcs#7-padding')
 
 
 def cbc_encrypt(plaintext, key, iv=(b'\x00' * 16)):
@@ -40,6 +40,6 @@ def cbc_decrypt(ciphertext, key, iv=(b'\x00' * 16)):
 
 if __name__ == '__main__':
     with (Path(__file__).parent / 'challenge-data' / '10.txt').open('r') as fp:
-        encrypted_data = base64.b64decode(fp.read())
+        encrypted_data = b64decode(fp.read())
 
     print(cbc_decrypt(encrypted_data, b'YELLOW SUBMARINE').decode())

@@ -1,4 +1,4 @@
-import base64
+from base64 import b64decode
 from pathlib import Path
 
 from Crypto.Cipher import AES
@@ -11,7 +11,7 @@ def ecb_decrypt(data, key):
 
 if __name__ == '__main__':
     with (Path(__file__).parent / 'challenge-data' / '7.txt').open('r') as fp:
-        encrypted_data = base64.b64decode(fp.read())
+        encrypted_data = b64decode(fp.read())
 
     key = b'YELLOW SUBMARINE'
 

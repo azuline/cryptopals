@@ -1,9 +1,9 @@
-import base64
+from base64 import b64encode
 
 
 def convert(input_):
     bytes_ = bytes.fromhex(input_)
-    return base64.b64encode(bytes_)
+    return b64encode(bytes_)
 
 
 if __name__ == '__main__':

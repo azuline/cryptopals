@@ -1,7 +1,7 @@
-import importlib
+from importlib import import_module
 from pathlib import Path
 
-three = importlib.import_module('03-single-byte-xor-cipher')
+three = import_module('03-single-byte-xor-cipher')
 
 
 if __name__ == '__main__':

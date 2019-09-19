@@ -1,10 +1,10 @@
-import importlib
+from importlib import import_module
 from base64 import b64decode
 from secrets import token_bytes as random_bytes
 
 from Crypto.Cipher import AES
 
-eleven = importlib.import_module('11-an-ecb-cbc-detection-oracle')
+eleven = import_module('11-an-ecb-cbc-detection-oracle')
 
 # fmt: off
 string = b64decode("""
