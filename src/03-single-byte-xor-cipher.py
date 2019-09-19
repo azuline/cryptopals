@@ -62,12 +62,11 @@ if __name__ == '__main__':
     )
 
     options = get_options(bytes.fromhex(input_))
-    print('Options:')
-    for o in options:
-        print(o)
+    # print('Options:')
+    # for o in options:
+    #     print(o)
 
     selected_key, selected_option, selected_score = select_option(options)
-    print(f'\nSelected key: {selected_key}')
-    print('\nSelected Option:')
-    print(selected_option)
+    print(f'Selected key: {selected_key}')
+    print(f'Selected Option: {selected_option}')
     print(f'Selected score: {selected_score}')

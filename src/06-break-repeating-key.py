@@ -4,8 +4,8 @@ from pathlib import Path
 
 KEYSIZE_LIMS = [2, 40]
 
-three = importlib.import_module('3-single-byte-xor-cipher')
-five = importlib.import_module('5-implement-repeating-key-xor')
+three = importlib.import_module('03-single-byte-xor-cipher')
+five = importlib.import_module('05-implement-repeating-key-xor')
 
 
 def compute_edit_distance(bstr1, bstr2):

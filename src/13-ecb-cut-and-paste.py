@@ -26,7 +26,7 @@ def profile_for(email, uid='10', role='user'):
 
 
 def escape(string):
-    return string.replace('&', r'\\&').replace('=', r'\\=')
+    return string.replace('&', r'\&').replace('=', r'\=')
 
 
 def encrypt_profile(email):
@@ -42,14 +42,14 @@ def decrypt_profile(key, iv, encrypted_profile):
 
 
 if __name__ == '__main__':
-    assert key_val_parse(r'foo=ba\\=\\&r&baz=qux&zap=zazzle') == {
-        'foo': r'ba\\=\\&r',
+    assert key_val_parse(r'foo=ba\=\&r&baz=qux&zap=zazzle') == {
+        'foo': r'ba\=\&r',
         'baz': 'qux',
         'zap': 'zazzle',
     }
 
     assert profile_for('foo@foo.bar&role=admin') == (
-        r'email=foo@foo.bar\\&role\\=admin&uid=10&role=user'
+        r'email=foo@foo.bar\&role\=admin&uid=10&role=user'
     )
 
     assert decrypt_profile(*encrypt_profile('foo@bar.baz')) == {

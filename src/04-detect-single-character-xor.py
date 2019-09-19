@@ -1,7 +1,7 @@
 import importlib
 from pathlib import Path
 
-three = importlib.import_module('3-single-byte-xor-cipher')
+three = importlib.import_module('03-single-byte-xor-cipher')
 
 
 if __name__ == '__main__':
@@ -14,6 +14,4 @@ if __name__ == '__main__':
     ]
 
     selected = sorted(options, key=lambda o: o[1][2], reverse=True)[0][1]
-
-    print('Selected:')
-    print(selected[1])
+    print(f'Selected: {selected[1]}')
