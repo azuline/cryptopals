@@ -76,6 +76,6 @@ if __name__ == '__main__':
     mt = MersenneTwister(68)
     rands = [mt.extract_number() for _ in range(1000)]
     mt2 = MersenneTwister(68)
-    rands2 = [mt.extract_number() for _ in range(1000)]
-    assert mt == mt2
+    rands2 = [mt2.extract_number() for _ in range(1000)]
+    assert rands == rands2
     print('Passed')
