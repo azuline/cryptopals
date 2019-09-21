@@ -21,9 +21,9 @@ class MersenneTwister:
     m = 397
     r = 31
     a = 0x9908B0DF
-    u, d = 11, 0xFFFFFFFF16
-    s, b = 7, 0x9D2C568016
-    t, c = 15, 0xEFC6000016
+    u, d = 11, 0xFFFFFFFF
+    s, b = 7, 0x9D2C5680
+    t, c = 15, 0xEFC60000
     l = 18  # noqa
     f = 1812433253
 
@@ -52,10 +52,10 @@ class MersenneTwister:
             self.twist()
 
         y = self.state[self.index]
-        y ^= (y >> self.u) & self.d
+        y ^= y >> self.u  # & self.d  # Not needed in 32-bit
         y ^= (y << self.s) & self.b
         y ^= (y << self.t) & self.c
-        y ^= y >> 1
+        y ^= y >> self.l
 
         self.index += 1
         return y & 0xFFFFFFFF
