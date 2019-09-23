@@ -1,24 +1,32 @@
 from base64 import b64decode
+
 from Crypto.Cipher import AES
 
 
 def ctr_crypt(text, key, nonce):
-    cipher = AES.new(key, mode=AES.MODE_ECB)
-    counter = 0
-
-    keystream = b''
-    for i in range(0, len(text), 16):
-        keystream += cipher.encrypt(
-            nonce.to_bytes(length=8, byteorder='little')
-            + counter.to_bytes(length=8, byteorder='little')
-        )
-        counter += 1
+    keystream = get_keystream(key, nonce, len(text))
 
     output = []
     for c, k in zip(text, keystream):
         output.append(c ^ k)
 
     return bytes(output)
+
+
+def get_keystream(key, nonce, length):
+    cipher = AES.new(key, mode=AES.MODE_ECB)
+
+    keystream = b''
+
+    counter = 0
+    for i in range(0, length, 16):
+        keystream += cipher.encrypt(
+            nonce.to_bytes(length=8, byteorder='little')
+            + counter.to_bytes(length=8, byteorder='little')
+        )
+        counter += 1
+
+    return keystream
 
 
 if __name__ == '__main__':
