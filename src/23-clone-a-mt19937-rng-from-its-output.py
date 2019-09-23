@@ -1,3 +1,5 @@
+# INCOMPLETE
+
 from importlib import import_module
 from random import randint
 
@@ -18,6 +20,8 @@ def clone_mt19937(twister):
 
 def untemper(twister, byte):
     # Invert these... somehow.
+    # I am skipping this since non-trivial bitwise operations like this are
+    # going to lead me in circles for days, likely.
     byte ^= byte >> twister.l
     byte ^= (byte << twister.t) & twister.c
     byte ^= (byte << twister.s) & twister.b
