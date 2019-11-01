@@ -178,7 +178,7 @@ class Sha1Hash(object):
         return _process_chunk(message[64:], *h)
 
 
-def sha1(data, key=''):
+def sha1(data, key=b''):
     """SHA-1 Hashing Function
 
     A custom SHA-1 hashing function implemented entirely in Python.
