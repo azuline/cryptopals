@@ -1,3 +1,3 @@
-my solutions (in python) to the cryptopals crypto challenges - https://cryptopals.com/
+My solutions, in Python, to the cryptopals crypto challenges - https://cryptopals.com/
 
-numbers 23 and 32 are incomplete
+Challenges 23 and 32 are incomplete.
