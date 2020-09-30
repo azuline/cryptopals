@@ -21,35 +21,31 @@ p = int(
     16,
 )
 
-g = 2
+
+def make_aes_key(integer):
+    return twentyeight.sha1(integer.to_bytes(1600, "little"))[:16]
 
 
-def diffie_hellman_mitm():
+def diffie_hellman_mitm(g):
+    # Assume p & g have been sent, acknowledged, and tampered with.
+
     message = b"example message~"
-    print(f"DH'ing message: {message}")
+    print(f"DH'ing message: {message} with g = {g}")
 
     # Generate A's DH values.
     a = randbelow(p)
     A = pow(g, a, p)
 
-    print("ACTION: A -> M :: Send `p, g, A`")
-
-    A = p
-
-    print("ACTION: M -> B :: Send `p, g, p`")
+    print("ACTION: A -> B :: Send `A`")
 
     # Generate B's DH values.
     b = randbelow(p)
     B = pow(g, b, p)
 
-    print("ACTION: B -> M :: Send `B`")
-
-    B = p
-
-    print("ACTION: M -> A :: Send `p`")
+    print("ACTION: B -> A :: Send `B`")
 
     # Calculate DH shared key.
-    shared_key_a = twentyeight.sha1(pow(B, a, p).to_bytes(1600, "little"))[:16]
+    shared_key_a = make_aes_key(pow(B, a, p))
 
     # Encrypt message with A's key.
     iv_a = random_bytes(16)
@@ -58,12 +54,17 @@ def diffie_hellman_mitm():
 
     print(f"ACTION: A -> M :: Send encrypted message: {message_a}")
 
-    broken_key = twentyeight.sha1((0).to_bytes(1600, "little"))[:16]
+    if g == 1:
+        broken_keys = [make_aes_key(1)]
+    elif g == p:
+        broken_keys = [make_aes_key(0)]
+    elif g == p - 1:
+        broken_keys = [make_aes_key(i) for i in [1, p - 1]]
 
-    cipher = AES.new(broken_key, mode=AES.MODE_CBC, iv=iv_a)
-    broken_message_a = cipher.decrypt(message_a)
+    ciphers = [AES.new(key, mode=AES.MODE_CBC, iv=iv_a) for key in broken_keys]
+    broken_messages_a = [c.decrypt(message_a) for c in ciphers]
 
-    print(f"ACTION: M :: Decrypted A's message: {broken_message_a}")
+    print(f"ACTION: M :: Decrypted A's message: {b' or '.join(broken_messages_a)}")
     print(f"ACTION: M -> B :: Relay encrypted message: {message_a}")
 
     # Calculate DH shared key.
@@ -81,10 +82,10 @@ def diffie_hellman_mitm():
 
     print(f"ACTION: B -> M :: Send A's encrypted message back: {message_b}")
 
-    cipher = AES.new(broken_key, mode=AES.MODE_CBC, iv=iv_b)
-    broken_message_b = cipher.decrypt(message_b)
+    ciphers = [AES.new(key, mode=AES.MODE_CBC, iv=iv_b) for key in broken_keys]
+    broken_messages_b = [c.decrypt(message_b) for c in ciphers]
 
-    print(f"ACTION: M :: Decrypted B's message: {broken_message_b}")
+    print(f"ACTION: M :: Decrypted B's message: {b' or '.join(broken_messages_b)}")
     print(f"ACTION: M -> A :: Relay encrypted message: {message_a}")
 
     cipher = AES.new(shared_key_a, mode=AES.MODE_CBC, iv=iv_b)
@@ -92,11 +93,20 @@ def diffie_hellman_mitm():
 
     print(f"ACTION: A :: Decrypted B's message: {decrypted_message_b}")
 
-    assert broken_message_a == broken_message_b == message
+    assert message in broken_messages_a
+    assert message in broken_messages_b
 
 
 if __name__ == "__main__":
-    # Because we replaced public keys with `p`, the key is always zero...
-    diffie_hellman_mitm()
+    # If `g = 1`, then the secret key is always `1`.
+    diffie_hellman_mitm(g=1)
+
+    # If `g = p`, then the secret key is always `0`, because
+    # `p^x \equiv 0 \pmod{p}` for all `x`.
+    diffie_hellman_mitm(g=p)
+
+    # If `g = p - 1`, then the secret key is always `1 or -1 \pmod{p}`, because
+    # `(-1)^x \in {-1, 1}` for all `x`..
+    diffie_hellman_mitm(g=p - 1)
 
     print("Passed")
