@@ -26,10 +26,12 @@ def diffie_hellman():
 
     s_a = pow(B, a, p)
     s_b = pow(A, b, p)
-    assert s_a == s_b
 
-    print("The math checks out!")
+    return s_a, s_b
 
 
 if __name__ == "__main__":
-    diffie_hellman()
+    s_a, s_b = diffie_hellman()
+    assert s_a == s_b
+
+    print("The math checks out!")
