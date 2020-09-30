@@ -19,8 +19,6 @@ def encrypt(plaintext):
     key = token_bytes(16)
     nonce = randint(0, 127)
     return key, nonce, eighteen.ctr_crypt(plaintext, key, nonce)
-    # cipher = AES.new(key, mode=AES.MODE_CTR, nonce=nonce)
-    # return key, nonce, cipher.encrypt(plaintext)
 
 
 def edit(ciphertext, key, nonce, offset, newtext):

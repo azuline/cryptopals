@@ -35,6 +35,8 @@ def break_crypto(ciphertext):
 if __name__ == "__main__":
     key, nonce, ciphertext = wrap_string(b"-;admin=true")
     assert not check_admin(key, nonce, ciphertext)
+
     ciphertext = break_crypto(ciphertext)
     assert check_admin(key, nonce, ciphertext)
+
     print("Passed")

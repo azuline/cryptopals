@@ -19,9 +19,6 @@ def wrap_string(string):
 def check_admin(key, iv, ciphertext):
     cipher = AES.new(key, mode=AES.MODE_CBC, iv=iv)
     plaintext = cipher.decrypt(ciphertext)
-    # for i in range(0, len(plaintext), 16):
-    #     print(plaintext[i : i + 16])
-
     return b";admin=true;" in plaintext
 
 
@@ -36,6 +33,8 @@ def break_crypto(ciphertext):
 if __name__ == "__main__":
     key, iv, ciphertext = wrap_string(b"-;admin=true")
     assert not check_admin(key, iv, ciphertext)
+
     ciphertext = break_crypto(ciphertext)
     assert check_admin(key, iv, ciphertext)
+
     print("Passed")

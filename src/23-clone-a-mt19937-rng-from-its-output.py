@@ -32,6 +32,8 @@ def untemper(twister, byte):
 if __name__ == "__main__":
     twister = MersenneTwister(randint(0, 1000))
     clone = clone_mt19937(twister)
+
     for _ in range(624):
         assert twister.extract_number() == clone.extract_number()
+
     print("Passed")

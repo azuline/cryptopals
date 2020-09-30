@@ -14,25 +14,21 @@ def crypt(plaintext, seed):
     for i in range(0, len(plaintext), 4):
         keystream += mt.extract_number().to_bytes(length=4, byteorder="little")
 
-    ciphertext = []
-    for p, k in zip(plaintext, keystream):
-        ciphertext.append(p ^ k)
-
-    return bytes(ciphertext)
+    return bytes(p ^ k for p, k in zip(plaintext, keystream))
 
 
-def crack_seed(plaintext, ciphertext):
+def crack_seed(ciphertext):
     for seed in range(0, MAX_SEED):
         decrypted = crypt(ciphertext, seed)
-        if decrypted == plaintext:
+        if decrypted.endswith(b"A" * 14):
             return seed
-    raise Exception  # Shouldn't occur, thanks brute force.
 
 
 if __name__ == "__main__":
     seed = randint(0, MAX_SEED)
     plaintext = b"helloooAAAAAAAAAAAAAA"
+
     ciphertext = crypt(plaintext, seed)
-    cracked_seed = crack_seed(plaintext, ciphertext)
-    assert seed == cracked_seed
+    assert seed == crack_seed(ciphertext)
+
     print("Passed")

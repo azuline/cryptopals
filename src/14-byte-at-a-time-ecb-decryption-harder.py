@@ -1,19 +1,18 @@
-from importlib import import_module
 from base64 import b64decode
-from secrets import token_bytes as random_bytes
+from importlib import import_module
 from random import randint
+from secrets import token_bytes as random_bytes
 
 from Crypto.Cipher import AES
 
 eleven = import_module("11-an-ecb-cbc-detection-oracle")
 
 # fmt: off
-string = b64decode("""
+string = b64decode("""\
 Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg
 aGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBq
 dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg
-YnkK
-""".strip())
+YnkK""")
 # fmt: on
 
 
@@ -77,6 +76,7 @@ def determine_prefix_size(encrypter, block_size=16):
     # secret string.
     block1 = ciphertext[i : i + block_size]
     block2 = ciphertext[i + block_size : i + 2 * block_size]
+
     while block1 == block2:
         num_as -= 1
         ciphertext = encrypter(b"A" * num_as)
@@ -90,14 +90,16 @@ def determine_prefix_size(encrypter, block_size=16):
 def determine_block_size(encrypter):
     resize_sizes = []
     prev_length = len(encrypter(b"A"))
+
     for i in range(2, 64):
         ciphertext = encrypter(b"A" * i)
+
         if len(ciphertext) != prev_length:
             resize_sizes.append(i)
             prev_length = len(ciphertext)
+
         if len(resize_sizes) == 2:
             return resize_sizes[1] - resize_sizes[0]
-    raise Exception  # Won't ever happen here, perhaps with larger block size.
 
 
 def pad(bytestring, boundary=16):
