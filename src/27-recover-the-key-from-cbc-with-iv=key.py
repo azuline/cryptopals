@@ -23,7 +23,7 @@ def decrypt(key_iv, ciphertext):
 
 def verify_ascii(plaintext):
     try:
-        plaintext.decode('ascii')
+        plaintext.decode("ascii")
     except UnicodeDecodeError:
         raise InvalidASCII(plaintext)
 
@@ -42,12 +42,10 @@ def extract_key(ciphertext, decrypter):
     return key
 
 
-if __name__ == '__main__':
-    plaintext = (
-        b'mean white cow power might strong pair sentence hat quiet hair'
-    )
+if __name__ == "__main__":
+    plaintext = b"mean white cow power might strong pair sentence hat quiet hair"
     key_iv, ciphertext = encrypt(plaintext)
     assert key_iv == extract_key(
         ciphertext, lambda ciphertext: decrypt(key_iv, ciphertext)
     )
-    print('Passed')
+    print("Passed")

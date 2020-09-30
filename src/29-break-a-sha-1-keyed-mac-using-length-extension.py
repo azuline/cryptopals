@@ -2,25 +2,25 @@ import math
 import struct
 from importlib import import_module
 
-twentyeight = import_module('28-implement-a-sha-1-keyed-mac')
+twentyeight = import_module("28-implement-a-sha-1-keyed-mac")
 
 
 def md_pad(message, keylen):
     message_len = len(message) + keylen
-    message += b'\x80' + b'\x00' * ((56 - (message_len + 1) % 64) % 64)
-    message += struct.pack(b'>Q', message_len * 8)
+    message += b"\x80" + b"\x00" * ((56 - (message_len + 1) % 64) % 64)
+    message += struct.pack(b">Q", message_len * 8)
     return message
 
 
 def modify_admin(string, prefix_hash, keylen):
-    admin_str = b';admin=true'
+    admin_str = b";admin=true"
     modified_string = md_pad(string, keylen) + admin_str
 
-    h0 = struct.unpack('>I', prefix_hash[0:4])[0]
-    h1 = struct.unpack('>I', prefix_hash[4:8])[0]
-    h2 = struct.unpack('>I', prefix_hash[8:12])[0]
-    h3 = struct.unpack('>I', prefix_hash[12:16])[0]
-    h4 = struct.unpack('>I', prefix_hash[16:20])[0]
+    h0 = struct.unpack(">I", prefix_hash[0:4])[0]
+    h1 = struct.unpack(">I", prefix_hash[4:8])[0]
+    h2 = struct.unpack(">I", prefix_hash[8:12])[0]
+    h3 = struct.unpack(">I", prefix_hash[12:16])[0]
+    h4 = struct.unpack(">I", prefix_hash[16:20])[0]
 
     modified_message_byte_len = (
         int(math.ceil((len(modified_string) - len(admin_str)) / 64)) * 64
@@ -28,8 +28,7 @@ def modify_admin(string, prefix_hash, keylen):
 
     modified_hash = (
         twentyeight.Sha1Hash(
-            digest_vars=(h0, h1, h2, h3, h4),
-            message_byte_len=modified_message_byte_len,
+            digest_vars=(h0, h1, h2, h3, h4), message_byte_len=modified_message_byte_len,
         )
         .update(admin_str)
         .digest()
@@ -38,27 +37,25 @@ def modify_admin(string, prefix_hash, keylen):
     return modified_string, modified_hash
 
 
-if __name__ == '__main__':
-    secret_key = b'luminously'
+if __name__ == "__main__":
+    secret_key = b"luminously"
     string = (
-        b'comment1=cooking%20MCs;userdata=foo;'
-        b'comment2=%20like%20a%20pound%20of%20bacon'
+        b"comment1=cooking%20MCs;userdata=foo;"
+        b"comment2=%20like%20a%20pound%20of%20bacon"
     )
 
     prefix_hash = twentyeight.sha1(string, key=secret_key)
 
-    modified_string, modified_hash = modify_admin(
-        string, prefix_hash, len(secret_key)
-    )
+    modified_string, modified_hash = modify_admin(string, prefix_hash, len(secret_key))
     expected_hash = twentyeight.sha1(modified_string, key=secret_key)
 
-    print('\nModified string:')
+    print("\nModified string:")
     print(modified_string)
-    print('\nModified hash:')
+    print("\nModified hash:")
     print(modified_hash)
-    print('\nExpected hash:')
+    print("\nExpected hash:")
     print(expected_hash)
 
     assert modified_hash == expected_hash
 
-    print('\nPassed')
+    print("\nPassed")

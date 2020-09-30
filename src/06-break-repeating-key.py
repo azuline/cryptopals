@@ -4,8 +4,8 @@ from pathlib import Path
 
 KEYSIZE_LIMS = [2, 40]
 
-three = import_module('03-single-byte-xor-cipher')
-five = import_module('05-implement-repeating-key-xor')
+three = import_module("03-single-byte-xor-cipher")
+five = import_module("05-implement-repeating-key-xor")
 
 
 def compute_edit_distance(bstr1, bstr2):
@@ -13,7 +13,7 @@ def compute_edit_distance(bstr1, bstr2):
 
     edit_distance = 0
     for byte in diff:
-        edit_distance += sum(bit.count('1') for bit in bin(byte))
+        edit_distance += sum(bit.count("1") for bit in bin(byte))
 
     return edit_distance
 
@@ -43,7 +43,7 @@ def break_ciphertext(data, keysize):
 def transpose_blocks(blocks, keysize):
     transposed = []
     for i in range(keysize):
-        tblock = b''
+        tblock = b""
         for block in blocks:
             try:
                 tblock += bytes([block[i]])
@@ -53,21 +53,21 @@ def transpose_blocks(blocks, keysize):
     return transposed
 
 
-if __name__ == '__main__':
-    with (Path(__file__).parent / 'challenge-data' / '6.txt').open('r') as fp:
+if __name__ == "__main__":
+    with (Path(__file__).parent / "challenge-data" / "6.txt").open("r") as fp:
         encrypted_data = b64decode(fp.read())
 
-    assert compute_edit_distance(b'this is a test', b'wokka wokka!!!') == 37
+    assert compute_edit_distance(b"this is a test", b"wokka wokka!!!") == 37
 
     keysize = find_keysize(encrypted_data, *KEYSIZE_LIMS)
     blocks = break_ciphertext(encrypted_data, keysize)
     transposed_blocks = transpose_blocks(blocks, keysize)
-    key = b''
+    key = b""
     for block in transposed_blocks:
         options = three.get_options(block)
         key += bytes([three.select_option(options)[0]])
 
-    print('Key:')
+    print("Key:")
     print(key)
-    print('\nDecrypted:')
+    print("\nDecrypted:")
     print(five.encrypt(encrypted_data, key).decode())

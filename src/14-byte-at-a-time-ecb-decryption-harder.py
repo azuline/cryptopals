@@ -5,7 +5,7 @@ from random import randint
 
 from Crypto.Cipher import AES
 
-eleven = import_module('11-an-ecb-cbc-detection-oracle')
+eleven = import_module("11-an-ecb-cbc-detection-oracle")
 
 # fmt: off
 string = b64decode("""
@@ -25,14 +25,12 @@ def generate_random_cipher():
 def decode_string(encrypter):
     block_size = determine_block_size(encrypter)
     prefix_size = determine_prefix_size(encrypter, block_size)
-    string_len = len(encrypter(b'')) - prefix_size
-    decoded = b''
+    string_len = len(encrypter(b"")) - prefix_size
+    decoded = b""
 
     for i in range(1, string_len + 1):
-        input_ = b'A' * (
-            block_size
-            + ((block_size - prefix_size) % block_size)
-            - (i % block_size)
+        input_ = b"A" * (
+            block_size + ((block_size - prefix_size) % block_size) - (i % block_size)
         )
         blocks_size = len(input_) + len(decoded) + 1
 
@@ -63,7 +61,7 @@ def determine_prefix_size(encrypter, block_size=16):
     num_as = block_size * 3
 
     # First find a general boundary to start decrementing at.
-    ciphertext = encrypter(b'A' * num_as)
+    ciphertext = encrypter(b"A" * num_as)
     found = set()
 
     for i in range(0, len(ciphertext), block_size):
@@ -81,7 +79,7 @@ def determine_prefix_size(encrypter, block_size=16):
     block2 = ciphertext[i + block_size : i + 2 * block_size]
     while block1 == block2:
         num_as -= 1
-        ciphertext = encrypter(b'A' * num_as)
+        ciphertext = encrypter(b"A" * num_as)
         block1 = ciphertext[i : i + block_size]
         block2 = ciphertext[i + block_size : i + 2 * block_size]
 
@@ -91,9 +89,9 @@ def determine_prefix_size(encrypter, block_size=16):
 
 def determine_block_size(encrypter):
     resize_sizes = []
-    prev_length = len(encrypter(b'A'))
+    prev_length = len(encrypter(b"A"))
     for i in range(2, 64):
-        ciphertext = encrypter(b'A' * i)
+        ciphertext = encrypter(b"A" * i)
         if len(ciphertext) != prev_length:
             resize_sizes.append(i)
             prev_length = len(ciphertext)
@@ -103,18 +101,16 @@ def determine_block_size(encrypter):
 
 
 def pad(bytestring, boundary=16):
-    return bytestring + (b'\x00' * (boundary - len(bytestring) % boundary))
+    return bytestring + (b"\x00" * (boundary - len(bytestring) % boundary))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cipher = generate_random_cipher()
     prefix_size = randint(12, 36)
     prefix = random_bytes(prefix_size)
-    encrypter = lambda text: cipher.encrypt(  # noqa
-        pad(prefix + text + string)
-    )
+    encrypter = lambda text: cipher.encrypt(pad(prefix + text + string))  # noqa
 
     assert determine_block_size(encrypter) == 16
     assert determine_prefix_size(encrypter, 16) == prefix_size
 
-    print(decode_string(encrypter).rstrip(b'\x00').decode())
+    print(decode_string(encrypter).rstrip(b"\x00").decode())

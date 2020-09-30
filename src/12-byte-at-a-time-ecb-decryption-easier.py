@@ -4,7 +4,7 @@ from secrets import token_bytes as random_bytes
 
 from Crypto.Cipher import AES
 
-eleven = import_module('11-an-ecb-cbc-detection-oracle')
+eleven = import_module("11-an-ecb-cbc-detection-oracle")
 
 # fmt: off
 string = b64decode("""
@@ -22,12 +22,12 @@ def generate_random_cipher():
 
 
 def decode_string(encrypter):
-    string_len = len(encrypter(b''))
+    string_len = len(encrypter(b""))
     block_size = determine_block_size(encrypter)
-    decoded = b''
+    decoded = b""
 
     for i in range(1, string_len + 1):
-        input_ = b'A' * (block_size - (i % block_size))
+        input_ = b"A" * (block_size - (i % block_size))
         blocks_size = len(input_) + len(decoded) + 1
         block_possibilities = {
             encrypter(input_ + decoded + bytes([b]))[:blocks_size]: bytes([b])
@@ -40,9 +40,9 @@ def decode_string(encrypter):
 
 def determine_block_size(encrypter):
     resize_sizes = []
-    prev_length = len(encrypter(b'A'))
+    prev_length = len(encrypter(b"A"))
     for i in range(2, 64):
-        ciphertext = encrypter(b'A' * i)
+        ciphertext = encrypter(b"A" * i)
         if len(ciphertext) != prev_length:
             resize_sizes.append(i)
             prev_length = len(ciphertext)
@@ -52,11 +52,11 @@ def determine_block_size(encrypter):
 
 
 def pad(bytestring, boundary=16):
-    return bytestring + (b'\x00' * (boundary - len(bytestring) % boundary))
+    return bytestring + (b"\x00" * (boundary - len(bytestring) % boundary))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cipher = generate_random_cipher()
     encrypter = lambda text: cipher.encrypt(pad(text + string))  # noqa
     assert determine_block_size(encrypter) == 16
-    print(decode_string(encrypter).rstrip(b'\x00').decode())
+    print(decode_string(encrypter).rstrip(b"\x00").decode())

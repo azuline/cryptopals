@@ -6,12 +6,12 @@ from secrets import token_bytes
 
 from Crypto.Cipher import AES
 
-eighteen = import_module('18-implement-ctr-the-stream-cipher-mode')
+eighteen = import_module("18-implement-ctr-the-stream-cipher-mode")
 
 
 def get_plaintext():
-    cipher = AES.new(b'YELLOW SUBMARINE', mode=AES.MODE_ECB)
-    with (Path(__file__).parent / 'challenge-data' / '7.txt').open('r') as fp:
+    cipher = AES.new(b"YELLOW SUBMARINE", mode=AES.MODE_ECB)
+    with (Path(__file__).parent / "challenge-data" / "7.txt").open("r") as fp:
         return cipher.decrypt(b64decode(fp.read()))
 
 
@@ -34,17 +34,17 @@ def edit(ciphertext, key, nonce, offset, newtext):
 
 
 def recover_plaintext(ciphertext, edit_function):
-    newtext = b'A' * len(ciphertext)
+    newtext = b"A" * len(ciphertext)
     newtext_xor = edit_function(ciphertext, 0, newtext)
     keystream = bytes([n ^ x for n, x in zip(newtext, newtext_xor)])
     return bytes([c ^ k for c, k in zip(ciphertext, keystream)])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     plaintext = get_plaintext()
     key, nonce, ciphertext = encrypt(plaintext)
     edit_function = lambda ciphertext, offset, newtext: edit(  # noqa
         ciphertext, key, nonce, offset, newtext
     )
     assert recover_plaintext(ciphertext, edit_function) == plaintext
-    print('Passed')
+    print("Passed")

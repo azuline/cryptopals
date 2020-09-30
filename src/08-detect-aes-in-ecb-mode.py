@@ -20,8 +20,8 @@ def get_repeated_block_count(cipher):
     return repeated
 
 
-if __name__ == '__main__':
-    with (Path(__file__).parent / 'challenge-data' / '8.txt').open('r') as fp:
+if __name__ == "__main__":
+    with (Path(__file__).parent / "challenge-data" / "8.txt").open("r") as fp:
         ciphertexts = [bytes.fromhex(line) for line in fp]
 
     found = find_aes_in_ecb(ciphertexts)

@@ -16,23 +16,23 @@ def ctr_crypt(text, key, nonce):
 def get_keystream(key, nonce, length):
     cipher = AES.new(key, mode=AES.MODE_ECB)
 
-    keystream = b''
+    keystream = b""
 
     counter = 0
     for i in range(0, length, 16):
         keystream += cipher.encrypt(
-            nonce.to_bytes(length=8, byteorder='little')
-            + counter.to_bytes(length=8, byteorder='little')
+            nonce.to_bytes(length=8, byteorder="little")
+            + counter.to_bytes(length=8, byteorder="little")
         )
         counter += 1
 
     return keystream
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ciphertext = b64decode(
-        b'L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ=='
+        b"L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ=="
     )
-    key = b'YELLOW SUBMARINE'
+    key = b"YELLOW SUBMARINE"
     nonce = 0
     print(ctr_crypt(ciphertext, key, nonce))

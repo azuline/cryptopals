@@ -5,7 +5,7 @@ from secrets import token_bytes as random_bytes
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
-fifteen = import_module('15-pkcs#7-padding-validation')
+fifteen = import_module("15-pkcs#7-padding-validation")
 
 # fmt: off
 STRINGS = [
@@ -38,8 +38,8 @@ def check_ciphertext(key, iv, ciphertext):
     return fifteen.is_padding_valid(plaintext)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for _ in range(100):
         key, iv, ciphertext = encrypt_random()
         assert check_ciphertext(key, iv, ciphertext)
-    print('Passed')
+    print("Passed")

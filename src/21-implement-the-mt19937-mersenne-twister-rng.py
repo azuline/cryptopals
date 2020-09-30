@@ -42,9 +42,7 @@ class MersenneTwister:
         self.state[0] = self.seed
         for i in range(1, self.n):
             self.state[i] = (
-                self.f
-                * (self.state[i - 1] ^ (self.state[i - 1] >> (self.w - 2)))
-                + i
+                self.f * (self.state[i - 1] ^ (self.state[i - 1] >> (self.w - 2))) + i
             ) & 0xFFFFFFFF
 
     def extract_number(self):
@@ -72,10 +70,10 @@ class MersenneTwister:
         self.index = 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     mt = MersenneTwister(68)
     rands = [mt.extract_number() for _ in range(1000)]
     mt2 = MersenneTwister(68)
     rands2 = [mt2.extract_number() for _ in range(1000)]
     assert rands == rands2
-    print('Passed')
+    print("Passed")

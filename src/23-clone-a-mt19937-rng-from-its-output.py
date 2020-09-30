@@ -3,7 +3,7 @@
 from importlib import import_module
 from random import randint
 
-twentyone = import_module('21-implement-the-mt19937-mersenne-twister-rng')
+twentyone = import_module("21-implement-the-mt19937-mersenne-twister-rng")
 MersenneTwister = twentyone.MersenneTwister
 
 
@@ -29,9 +29,9 @@ def untemper(twister, byte):
     return byte
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     twister = MersenneTwister(randint(0, 1000))
     clone = clone_mt19937(twister)
     for _ in range(624):
         assert twister.extract_number() == clone.extract_number()
-    print('Passed')
+    print("Passed")

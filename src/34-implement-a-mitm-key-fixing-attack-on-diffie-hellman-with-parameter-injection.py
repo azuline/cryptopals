@@ -55,8 +55,8 @@ async def server_eve():
     """Eve MITMs Alice and Bob."""
 
 
-if __name__ == '__main__':
-    print('Starting actors...', end='\n\n')
+if __name__ == "__main__":
+    print("Starting actors...", end="\n\n")
     Thread(target=start_alice).start()
     Thread(target=start_bob).start()
     Thread(target=start_eve).start()

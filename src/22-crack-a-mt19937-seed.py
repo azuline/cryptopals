@@ -2,7 +2,7 @@ from time import time, sleep
 from random import randint
 from importlib import import_module
 
-twentyone = import_module('21-implement-the-mt19937-mersenne-twister-rng')
+twentyone = import_module("21-implement-the-mt19937-mersenne-twister-rng")
 MersenneTwister = twentyone.MersenneTwister
 
 
@@ -18,11 +18,11 @@ def crack_seed(random_bit):
     raise Exception("Seed not found.")  # Shouldn't happen.
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     random_wait()
     seed = int(time())
     mt = MersenneTwister(seed)
     random_wait()
     random_bit = mt.extract_number()
     assert seed == crack_seed(random_bit)
-    print('Passed')
+    print("Passed")

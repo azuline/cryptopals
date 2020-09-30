@@ -4,7 +4,7 @@ from secrets import token_bytes as random_bytes
 
 from Crypto.Cipher import AES
 
-nine = import_module('09-implement-pkcs#7-padding')
+nine = import_module("09-implement-pkcs#7-padding")
 
 
 def get_padding():
@@ -19,13 +19,11 @@ def get_random_cipher():
 
 
 def encrypt_plaintext(cipher, plaintext):
-    return cipher.encrypt(
-        nine.pkcs7_pad(get_padding() + plaintext + get_padding())
-    )
+    return cipher.encrypt(nine.pkcs7_pad(get_padding() + plaintext + get_padding()))
 
 
 def guess_mode(cipher):
-    encrypted = encrypt_plaintext(cipher, b'a' * 256)
+    encrypted = encrypt_plaintext(cipher, b"a" * 256)
     found = set()
     for i in range(0, len(encrypted), 16):
         block = encrypted[i : i + 16]
@@ -35,9 +33,9 @@ def guess_mode(cipher):
     return AES.MODE_CBC
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for _ in range(10):
         mode, cipher = get_random_cipher()
         guess = guess_mode(cipher)
         assert mode == guess
-    print('Passed')
+    print("Passed")
