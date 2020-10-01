@@ -10,56 +10,26 @@ five = import_module("05-implement-repeating-key-xor")
 
 def compute_edit_distance(bstr1, bstr2):
     diff = [a ^ b for a, b, in zip(bstr1, bstr2)]
-
-    edit_distance = 0
-    for byte in diff:
-        edit_distance += sum(bit.count("1") for bit in bin(byte))
-
-    return edit_distance
+    return sum(bin(byte).count("1") for byte in diff)
 
 
 def find_keysize(data, lower_limit, upper_limit):
-    keysizes = []
+    def calc_total_edit_distance(size):
+        blocks = break_ciphertext(data, size)
+        return sum(
+            compute_edit_distance(blocks[i], blocks[i + 1])
+            for i in range(0, len(blocks) - 1)
+        )
 
-    for size in range(lower_limit, upper_limit):
-        average_total = []
-
-        for i in range(0, len(data), size):
-            edit_dist = compute_edit_distance(
-                data[i : i + size], data[i + size : i + 2 * size]
-            )
-            average_total.append(edit_dist / (size or 1))
-
-        keysizes.append((sum(average_total) / (len(data) / size), size))
-
-    return sorted(keysizes, key=lambda tup: tup[0])[0][1]
+    return min(range(lower_limit, upper_limit), key=calc_total_edit_distance)
 
 
 def break_ciphertext(data, keysize):
-    blocks = []
-
-    while data:
-        blocks.append(data[:keysize])
-        data = data[keysize:]
-
-    return blocks
+    return [data[i : i + keysize] for i in range(0, len(data), keysize)]
 
 
 def transpose_blocks(blocks, keysize):
-    transposed = []
-
-    for i in range(keysize):
-        tblock = b""
-
-        for block in blocks:
-            try:
-                tblock += bytes([block[i]])
-            except IndexError:
-                pass
-
-        transposed.append(tblock)
-
-    return transposed
+    return [bytes(bl[i] for bl in blocks if len(bl) > i) for i in range(keysize)]
 
 
 if __name__ == "__main__":
@@ -72,11 +42,9 @@ if __name__ == "__main__":
     blocks = break_ciphertext(encrypted_data, keysize)
     transposed_blocks = transpose_blocks(blocks, keysize)
 
-    key = b""
-
-    for block in transposed_blocks:
-        options = three.get_options(block)
-        key += bytes([three.select_option(options)[0]])
+    key = bytes(
+        three.select_option(three.get_options(block)).key for block in transposed_blocks
+    )
 
     print("Key:")
     print(key)

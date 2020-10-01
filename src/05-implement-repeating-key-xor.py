@@ -1,13 +1,8 @@
+from itertools import cycle
+
+
 def encrypt(input_, key):
-    key = list(key)  # Bytes to list of ints.
-    output = b""
-    index = 0
-
-    for c in input_:
-        output += bytes([c ^ key[index]])
-        index = (index + 1) % len(key)
-
-    return output
+    return bytes(c ^ k for c, k in zip(input_, cycle(key)))
 
 
 if __name__ == "__main__":
