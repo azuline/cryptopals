@@ -1,6 +1,6 @@
 def pkcs7_pad(plaintext, pad_to=16):
     num = pad_to - len(plaintext) % pad_to
-    return plaintext + bytes([num]) * num
+    return plaintext + bytes([num] * num)
 
 
 if __name__ == "__main__":

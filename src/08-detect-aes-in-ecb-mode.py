@@ -1,24 +1,14 @@
+from collections import Counter
 from pathlib import Path
 
 
 def find_aes_in_ecb(ciphertexts):
-    occurrences = [(get_repeated_block_count(ct), ct) for ct in ciphertexts]
-    return sorted(occurrences, key=lambda tup: tup[0], reverse=True)[0][1]
+    return max(ciphertexts, key=get_repeated_block_count)
 
 
 def get_repeated_block_count(cipher):
-    repeated = 0
-    found = set()
-
-    for i in range(0, len(cipher), 16):
-        block = cipher[i : i + 16]
-
-        if block in found:
-            repeated += 1
-        else:
-            found.add(block)
-
-    return repeated
+    blocks = [cipher[i : i + 16] for i in range(0, len(cipher), 16)]
+    return sum(v - 1 for v in Counter(blocks).values())
 
 
 if __name__ == "__main__":
