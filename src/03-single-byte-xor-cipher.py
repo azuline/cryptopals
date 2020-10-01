@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 CHAR_FREQS = {
     "a": 0.08167,
     "b": 0.01492,
@@ -28,40 +30,34 @@ CHAR_FREQS = {
     " ": 0.13000,
 }
 
+Option = namedtuple("Option", ["key", "option", "score"])
+
 
 def xor(bytestring, byte):
-    return bytes((b ^ byte) for b in bytestring)
+    return bytes(b ^ byte for b in bytestring)
 
 
 def get_options(input_):
-    return [(digit, xor(input_, digit)) for digit in range(256)]
+    options = []
+
+    for key in range(256):
+        option = xor(input_, key).decode("ascii", errors="ignore")
+        score = sum(CHAR_FREQS.get(c, 0) for c in option.lower())
+        options.append(Option(key, option, score))
+
+    return options
 
 
 def select_option(options):
-    selected_option = None
-    selected_key = None
-    selected_score = 0
-
-    for digit, option in options:
-        decoded = option.decode("ascii", errors="ignore")
-        score = sum(CHAR_FREQS.get(o.lower(), 0) for o in decoded)
-
-        if score > selected_score:
-            selected_option = option
-            selected_key = digit
-            selected_score = score
-
-    return selected_key, selected_option, selected_score
+    return max(options, key=lambda option: option.score)
 
 
 if __name__ == "__main__":
-    input_ = (
-        "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"  # noqa
-    )
+    input_ = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 
     options = get_options(bytes.fromhex(input_))
-    selected_key, selected_option, selected_score = select_option(options)
+    selected = select_option(options)
 
-    print(f"Selected key: {selected_key}")
-    print(f"Selected Option: {selected_option}")
-    print(f"Selected score: {selected_score}")
+    print(f"Selected key: {selected.key}")
+    print(f"Selected Option: {selected.option}")
+    print(f"Selected score: {selected.score}")

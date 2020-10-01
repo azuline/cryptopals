@@ -1,15 +1,17 @@
 from importlib import import_module
+from itertools import chain
 from pathlib import Path
 
 three = import_module("03-single-byte-xor-cipher")
 
+DATA_PATH = Path(__file__).parent / "challenge-data" / "4.txt"
+
 
 if __name__ == "__main__":
-    with (Path(__file__).parent / "challenge-data" / "4.txt").open("r") as fp:
+    with DATA_PATH.open("r") as fp:
         strings = [bytes.fromhex(line.strip()) for line in fp]
 
-    options = [(str_, three.select_option(three.get_options(str_))) for str_ in strings]
+    options = chain(*(three.get_options(str_) for str_ in strings))
+    selected = three.select_option(options)
 
-    selected = sorted(options, key=lambda o: o[1][2], reverse=True)[0][1]
-
-    print(f"Selected: {selected[1]}")
+    print(f"Selected: {selected.option}")
