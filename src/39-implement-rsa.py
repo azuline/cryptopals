@@ -2,10 +2,18 @@ from Crypto.Util.number import getPrime
 
 
 def extended_gcd(a, b):
-    if a == 0:
-        return (b, 0, 1)
-    g, y, x = extended_gcd(b % a, a)
-    return (g, x - (b // a) * y, y)
+    """
+    Recursive solution hits max recursive depth... depressing state of affairs
+    Python...
+    """
+    x, y, u, v = 0, 1, 1, 0
+
+    while a != 0:
+        q, r = b // a, b % a
+        m, n = x - u * q, y - v * q
+        b, a, x, y, u, v, = a, r, u, v, m, n
+
+    return b, x, y
 
 
 def invmod(integer, modulo):
