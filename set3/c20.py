@@ -23,7 +23,7 @@ def solve_ciphertexts(ciphertexts):
     ct_length, trunc_ciphertexts = truncate_ciphertexts(ciphertexts)
     transposed_cts = transpose_blocks(trunc_ciphertexts, ct_length)
     keystream = bytes(select_option(get_options(block))[0] for block in transposed_cts)
-    return [xor(cycle(keystream), ct) for ct in ciphertexts]
+    return [xor(cycle(keystream), ct) for ct in trunc_ciphertexts]
 
 
 def truncate_ciphertexts(ciphertexts):
